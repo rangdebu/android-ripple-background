@@ -121,7 +121,6 @@ public class RippleBackground extends RelativeLayout{
 
         public RippleView(Context context) {
             super(context);
-            this.setVisibility(View.INVISIBLE);
         }
 
         @Override
@@ -133,9 +132,6 @@ public class RippleBackground extends RelativeLayout{
 
     public void startRippleAnimation(){
         if(!isRippleAnimationRunning()){
-            for(RippleView rippleView:rippleViewList){
-                rippleView.setVisibility(VISIBLE);
-            }
             if (animatorList != null){
                 for (Animator anim : animatorList){
                     if(anim instanceof ObjectAnimator)
