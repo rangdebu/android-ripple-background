@@ -1,6 +1,7 @@
 package com.skyfishjy.library;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -37,6 +38,7 @@ public class RippleBackground extends RelativeLayout{
     private boolean animationRunning=false;
     private AnimatorSet animatorSet;
     private ArrayList<Animator> animatorList;
+    private int animationCount;
     private LayoutParams rippleParams;
     private ArrayList<RippleView> rippleViewList=new ArrayList<RippleView>();
 
@@ -114,6 +116,20 @@ public class RippleBackground extends RelativeLayout{
             animatorList.add(alphaAnimator);
         }
 
+        if (rippleAmount > 0) {
+            Animator anim = animatorList.get(0);
+            anim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    animationCount = 0;
+                }
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    animationCount++;
+                }
+            });
+        }
+
         animatorSet.playTogether(animatorList);
     }
 
@@ -138,6 +154,7 @@ public class RippleBackground extends RelativeLayout{
                     ((ObjectAnimator) anim).setRepeatCount(ObjectAnimator.INFINITE);
                 }
             }
+            animatorSet.end();
             animatorSet.start();
             animationRunning=true;
         }
@@ -148,7 +165,7 @@ public class RippleBackground extends RelativeLayout{
             if (animatorList != null){
                 for (Animator anim : animatorList){
                     if(anim instanceof ObjectAnimator)
-                    ((ObjectAnimator) anim).setRepeatCount(0);
+                    ((ObjectAnimator) anim).setRepeatCount(animationCount);
                 }
             }
             animationRunning=false;
